@@ -3,42 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Evitar suspensión de pantalla</title>
+    <title>Mantener Pantalla Encendida</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            font-size: 24px;
+        }
+    </style>
     <script>
-        let wakeLock = null;
-
-        // Función para activar el Wake Lock
-        async function requestWakeLock() {
-            try {
-                wakeLock = await navigator.wakeLock.request('screen'); // Solicitar que la pantalla no se apague
-                console.log('Pantalla manteniéndose despierta.');
-                
-                // Si el dispositivo cambia de visibilidad (bloqueo/desbloqueo), reactivar el Wake Lock
-                document.addEventListener('visibilitychange', async () => {
-                    if (wakeLock !== null && document.visibilityState === 'visible') {
-                        wakeLock = await navigator.wakeLock.request('screen');
-                    }
-                });
-            } catch (err) {
-                console.error('Error al solicitar el Wake Lock:', err);
-            }
+        function simulateActivity() {
+            // Simula una pequeña actividad
+            document.body.style.backgroundColor = document.body.style.backgroundColor === '#f0f0f0' ? '#e0e0e0' : '#f0f0f0';
         }
 
-        // Función para liberar el Wake Lock
-        function releaseWakeLock() {
-            if (wakeLock !== null) {
-                wakeLock.release();
-                wakeLock = null;
-                console.log('Wake Lock liberado.');
-            }
-        }
-
-        window.onload = requestWakeLock; // Activar el Wake Lock al cargar la página
+        // Llama a la función cada 10 segundos para simular actividad
+        setInterval(simulateActivity, 10000);
+        
+        window.onload = simulateActivity; // Llama a la función al cargar
     </script>
 </head>
 <body>
-    <h1>Evitar suspensión de pantalla</h1>
-    <p>La pantalla permanecerá encendida mientras esta página esté abierta.</p>
-    <button onclick="releaseWakeLock()">Liberar Wake Lock</button>
+    <p>La pantalla intentará permanecer encendida.</p>
 </body>
 </html>
